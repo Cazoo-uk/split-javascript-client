@@ -22,17 +22,13 @@ export default class BrowserSignalListener {
     this.flushData = this.flushData.bind(this);
   }
 
-  windowIsDefined() {
-    return typeof window !== 'undefined'
-  }
-
   /**
    * start method. 
    * Called when SplitFactory is initialized. 
    * We add a handler on unload events. The handler flushes remaining impressions and events to the backend.
    */
   start() {
-    if (this.windowIsDefined() && window.addEventListener) {
+    if (window && window.addEventListener) {
       log.debug('Registering flush handler when unload page event is triggered.');
       window.addEventListener(UNLOAD_DOM_EVENT, this.flushData);
     }  
@@ -45,7 +41,7 @@ export default class BrowserSignalListener {
    * We need to remove the handler for unload events, since it can break if called when Split context was destroyed.
    */ 
   stop() {
-    if (this.windowIsDefined() && window.removeEventListener) {
+    if (window && window.removeEventListener) {
       log.debug('Deregistering flush handler when unload page event is triggered.');
       window.removeEventListener(UNLOAD_DOM_EVENT, this.flushData);
     }
